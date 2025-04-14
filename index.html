@@ -621,7 +621,8 @@ public class CategoryServlet extends HttpServlet {
     <p>
         Remember that request scope is highly ephemeral but provides a clean slate for each request, 
         minimizing the chance of data leakage between different operations. Always default to 
-        request scope unless you specifically need the data to persist longer.
+        request scope unless you specifically need the data to persist longer in server memory (in which case,
+        consider session scope for user-specific data or application scope for shared resources).
     </p>
 
     <footer style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 0.9em;">
