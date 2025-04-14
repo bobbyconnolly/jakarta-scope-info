@@ -618,6 +618,75 @@ public class CategoryServlet extends HttpServlet {
         </div>
     </div>
 
+    <h2>JSP and Scope Attribute Access</h2>
+    
+    <div class="scope-container" style="border-left: 5px solid #673ab7;">
+        <h3>How JSPs Access Attributes Across Different Scopes</h3>
+        
+        <p>
+            When using JavaServer Pages (JSP) with Jakarta EE, understanding how JSPs access attributes across different 
+            scopes becomes important. This is especially true when using the Expression Language (EL) to access attributes.
+        </p>
+        
+        <h4>Attribute Shadowing in JSP</h4>
+        
+        <p>
+            When you access an attribute in a JSP using the simplified EL syntax, Jakarta will search for that attribute in this order:
+        </p>
+        
+        <ol>
+            <li>Page scope (variables available only in the current JSP)</li>
+            <li>Request scope</li>
+            <li>Session scope</li>
+            <li>Application scope</li>
+        </ol>
+        
+        <p>
+            If attributes with the same name exist in multiple scopes, the one found first (according to the order above) will be used.
+            This is called "attribute shadowing."
+        </p>
+        
+        <div class="code-example">
+            <pre>
+// Setting attributes with the same name in different scopes
+request.setAttribute("user", "Guest User");
+session.setAttribute("user", "Logged-in User");
+application.setAttribute("user", "Default User");
+
+// In JSP, this will display "Guest User" (request scope takes precedence)
+${user}
+            </pre>
+        </div>
+        
+        <h4>Explicitly Specifying the Scope</h4>
+        
+        <p>
+            To avoid shadowing issues, you can explicitly specify which scope you want to access using the scope-specific implicit objects:
+        </p>
+        
+        <div class="code-example">
+            <pre>
+// In JSP, these access specific scopes
+${pageScope.user}      // Page scope
+${requestScope.user}   // Request scope ("Guest User")
+${sessionScope.user}   // Session scope ("Logged-in User")
+${applicationScope.user} // Application scope ("Default User")
+            </pre>
+        </div>
+        
+        <h4>Best Practice</h4>
+        
+        <p>
+            To avoid confusion and bugs caused by attribute shadowing:
+        </p>
+        
+        <ul>
+            <li>Use unique attribute names across different scopes</li>
+            <li>When attribute names might conflict, explicitly specify the scope when accessing them</li>
+            <li>Document your attribute names and their intended scopes in your codebase</li>
+        </ul>
+    </div>
+
     <p>
         Remember that request scope is highly ephemeral but provides a clean slate for each request, 
         minimizing the chance of data leakage between different operations. Always default to 
